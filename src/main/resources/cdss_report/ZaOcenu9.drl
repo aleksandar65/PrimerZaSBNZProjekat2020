@@ -1,0 +1,30 @@
+//created on: Jun 19, 2020
+package cdss_report
+
+//list any import classes here.
+
+import model.cdss.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
+
+
+rule "Moguci zavisnik"
+
+    when
+        $p: Pacijent($dijagnoza: istorijaBolesti)
+        accumulate(
+         	Dijagnoza($d: this, $datum: datum, $datum.isAfter(LocalDate.now().minusMonths(6)), $terapija: terapija, $lekar: lekar) from $dijagnoza and
+         	List(size > 0) from collect(
+         		Lek(tip == TipLeka.Analgetik) from $terapija.getLekovi()
+         	),
+         	$dijagnoze: collectList($d),
+         	$lekari: collectSet($lekar)
+         )
+         eval($lekari.size() >= 3)
+         eval($dijagnoze.size() >= 6)
+    then
+        System.out.println("Moguci zavisnik! Broj analegetika: " + $dijagnoze.size() + ", broj lekara: " + $lekari.size());
+
+end
+

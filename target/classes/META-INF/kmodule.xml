@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kmodule xmlns="http://jboss.org/kie/6.0.0/kmodule">
+    <kbase name="rules" packages="cdss">
+        <ksession name="ksession-rules"/>
+    </kbase>
+    
+    <kbase name="report-rules" packages="cdss_report">
+        <ksession name="ksession-report-rules"/>
+    </kbase>
+    
+    <kbase name="forward-rules" packages="chain">
+        <ksession name="ksession-chain-rules"/>
+    </kbase>
+</kmodule>

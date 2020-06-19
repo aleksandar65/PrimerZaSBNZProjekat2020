@@ -1,0 +1,55 @@
+//created on: Jun 18, 2020
+package cdsssimple
+
+//list any import classes here.
+import model.cdss.*;
+
+
+
+
+rule "Prehlada"
+	salience ((100*$value) / 5)
+    when
+    	$b: Bolest(naziv == "Prehlada")
+        $p: Pacijent(trenutnaBolest == null, $zalbe: zalbe)
+        Number($value: intValue >= 4) from accumulate(
+        	Simptom($t: this, this == Simptom.CurenjeIzNosa || this == Simptom.BolUGrlu || this == Simptom.Glavobolja || this == Simptom.Kijanje || this == Simptom.Kasalj ) from $zalbe,
+        	count($t)
+        )
+    then
+    	System.out.println("Prehlada: " + (100*$value) / 5);
+        modify($p) { setTrenutnaBolest($b) }
+
+end
+
+rule "Groznica"
+    salience ((100*$value) / 7)
+    when
+    	$b: Bolest(naziv == "Groznica")
+        $p: Pacijent(trenutnaBolest == null, $zalbe: zalbe)
+        Number($value: intValue >= 4) from accumulate(
+        	Simptom($t: this, this == Simptom.Kijanje || this == Simptom.BolUGrlu || this == Simptom.Kasalj || this == Simptom.TemperaturaVecaOd38 || 
+        					  this == Simptom.CurenjeIzNosa || this == Simptom.Glavobolja || this == Simptom.Drhtavica) from $zalbe,
+        	count($t)
+        )
+    then
+    	System.out.println("Groznica: " + (100*$value) / 7);
+        modify($p) { setTrenutnaBolest($b) }
+
+end
+
+rule "Upala krajnika"
+    salience ((100*$value) / 8)
+    when
+    	$b: Bolest(naziv == "Upala krajnika")
+        $p: Pacijent(trenutnaBolest == null, $zalbe: zalbe)
+        Number($value: intValue >= 4) from accumulate(
+        	Simptom($t: this, this == Simptom.BolUGrlu || this == Simptom.BolKojiSeSiriDoUsiju || this == Simptom.Glavobolja || this == Simptom.TemperaturaOd40Do41 || 
+        					  this == Simptom.Drhtavica || this == Simptom.GubitakApetita || this == Simptom.Umor || this == Simptom.ZutiSekretIzNosa) from $zalbe,
+        	count($t)
+        )
+    then
+    	System.out.println("Upala krajnika: " + (100*$value) / 8);
+        modify($p) { setTrenutnaBolest($b) }
+
+end
